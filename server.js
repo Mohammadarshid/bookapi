@@ -39,4 +39,3 @@ app.listen(PORT, () => {
   console.log(` server   is running on   ${PORT}`.black.bgBlue);
 });
 
-// C:\Users\LENOVO\Desktop\book api\server.js
