@@ -25,7 +25,7 @@ app.use(morgan("dev"));
 app.use("/api/test", require("./routes/testRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/book", require("./routes/bookroutes"));
-app.use("/api/review",require("./routes/reviewRoute"))
+app.use("/api/review", require("./routes/reviewRoutes"));
 app.get("/", (req, res) => {
   return res.status(200).send("<h1> Welcome to  book api server</h1>");
 });
@@ -38,4 +38,3 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(` server   is running on   ${PORT}`.black.bgBlue);
 });
-

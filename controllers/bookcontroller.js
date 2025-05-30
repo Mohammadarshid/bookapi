@@ -117,10 +117,9 @@ const getbookbyidcontroller = async (req, res) => {
       message: "Book fetched successfully",
       book,
       averageRating: book.averageRating,
-      totalReviews,
+
       currentPage: parseInt(page),
       totalPages: Math.ceil(totalReviews / limit),
-      reviews,
     });
   } catch (error) {
     console.error("Error fetching book by ID:", error);
@@ -131,8 +130,6 @@ const getbookbyidcontroller = async (req, res) => {
     });
   }
 };
-
-
 
 module.exports = {
   createBookController,

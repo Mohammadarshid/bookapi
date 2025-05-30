@@ -4,7 +4,6 @@ const reviewSchema = new mongoose.Schema(
   {
     bookId: {
       type: String,
-      ref: "Book",
       required: true,
     },
     review: {
@@ -21,7 +20,6 @@ const reviewSchema = new mongoose.Schema(
     description: {
       type: String,
     },
-
     comment: {
       type: String,
       trim: true,
@@ -34,4 +32,4 @@ const reviewSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Review", reviewSchema);
+module.exports = mongoose.model("Review", reviewSchema);

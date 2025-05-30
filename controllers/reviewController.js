@@ -1,154 +1,106 @@
-const ReviewModel = require("../models/ReviewModel");
-
+const reviewModel = require("../models/ReviewModel");
 const createReviewController = async (req, res) => {
   try {
-    // const { bookId } = req.params.id;
     const { bookId, review, rating, description, comment } = req.body;
-    // if (!bookId || !review || !rating || !description || comment) {
-    //   return res.status(400).send({
-    //     sucess: false,
-    //     message: "Please fill all  the fields",
-    //   });
-    // }
 
-    // //    create review
-    // const reviewdata = new ReviewModel({
-    //   bookId,
-    //   review,
-    //   rating,
-    //   description,
-    //   comment,
-    // });
-    // console.log(reviewdata);
-    const reviewdata = new ReviewModel({
+    if (!bookId || !review || !rating) {
+      return res.status(400).json({
+        success: false,
+        message: "bookId, review, and rating are required.",
+      });
+    }
+
+    const newReview = new reviewModel({
       bookId,
       review,
       rating,
       description,
       comment,
     });
-    await reviewdata.save();
-    console.log("Saved Review ID:", reviewdata._id); // ✅ helpful for future delete
 
-    // await reviewdata.save();
-
-    // if (!booked) {
-    //   return res.status(404).send({
-    //     success: false,
-    //     message: "booked not found",
-    //   });
-    // }
-    // const booked = await ReviewModel.create(info);
-    res.status(200).send({
+    const savedReview = await newReview.save();
+    console.log(savedReview);
+    return res.status(201).json({
       success: true,
-      message: "booked found",
-      reviewdata,
+      message: "Review created successfully.",
+      data: savedReview,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      sucess: false,
-      message: "Error in create review",
-      error,
+    console.error("Error creating review:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error.",
+      error: error.message,
     });
   }
 };
 
+// GET REVIEWS BY BOOK ID
 const getreviewbyidcontroller = async (req, res) => {
   try {
-    const { Id } = req.params;
-
-    const book = await ReviewModel.findById(Id);
-    if (!book) {
-      return res.status(404).send({
-        success: false,
-        message: "Book not found",
-      });
-    }
-    const reviews = await ReviewModel.find({ bookId: Id });
-    res.status(200).send({
-      success: true,
-      message: "review fetched successfully",
-      reviews,
-    });
-  } catch (error) {
-    console.error("Error fetching book by ID:", error);
-    res.status(500).send({
-      success: false,
-      message: "Error fetching book by ID",
-      error,
-    });
-  }
-};
-
-// const deletereviewbyidcontroller = async (req, res) => {
-//   try {
-//     const { id } = req.params.body;
-
-//     if (id) {
-//       return res.status(400).send({
-//         success: false,
-//         message: "Review ID is required",
-//       });
-//     }
-
-//     const deletedReview = await ReviewModel.findByIdAndDelete(id);
-//     console.log("deletedreview", deletedReview);
-
-//     if (!deletedReview) {
-//       return res.status(404).send({
-//         success: false,
-//         message: "No review found with the given ID",
-//       });
-//     }
-
-//     res.status(200).send({
-//       success: true,
-//       message: "Review deleted successfully",
-//       data: deletedReview,
-//     });
-//   } catch (error) {
-//     console.error("Error deleting review:", error);
-//     res.status(500).send({
-//       success: false,
-//       message: "Error in delete review API",
-//       error: error.message,
-//     });
-//   }
-// };
-
-const deletereviewbyidcontroller = async (req, res) => {
-  try {
     const { id } = req.params;
-    console.log("id", id);
+    console.log("Fetching reviews for booked ID:", id);
 
     if (!id) {
       return res.status(400).send({
+        success: false,
+        message: "Book ID is required",
+        id,
+      });
+    }
+    const review = await reviewModel.find({ bookId: id });
+
+    console.log(review);
+
+    res.status(200).send({
+      success: true,
+      message: "Reviews fetched successfully.",
+      review,
+    });
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    res.status(500).send({
+      success: false,
+      message: "Server Error",
+      error: error.message,
+    });
+  }
+};
+
+// DELETE REVIEW BY REVIEW ID
+const deletereviewbyidcontroller = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+
+    if (!id) {
+      res.status(400).send({
         success: false,
         message: "Review ID is required",
       });
     }
 
-    const deletedReview = await ReviewModel.findByIdAndDelete(id);
-    console.log("deletedReview", deletedReview);
+    const deletedReview = await reviewModel.findByIdAndDelete(id);
+    console.log("deletedReview:");
 
     if (!deletedReview) {
       return res.status(404).send({
         success: false,
-        message: "No review found with the given ID",
+        message: "No review found with the given ID.",
       });
     }
 
     res.status(200).send({
       success: true,
-      message: "Review deleted successfully",
-      data: deletedReview,
+      message: "Review deleted successfully.",
+      deletedReview,
     });
   } catch (error) {
     console.error("Error deleting review:", error);
     res.status(500).send({
       success: false,
-      message: "Error in delete review API",
+      message: "Server Error",
       error: error.message,
     });
   }
