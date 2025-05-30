@@ -106,8 +106,43 @@ const deletereviewbyidcontroller = async (req, res) => {
   }
 };
 
+// UPDATE REVIEW BY REVIEW ID
+const updateReviewController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { review, rating, description, comment } = req.body;
+
+    const updatedReview = await reviewModel.findByIdAndUpdate(
+      id,
+      { review, rating, description, comment },
+      { new: true }
+    );
+
+    if (!updatedReview) {
+      return res.status(404).send({
+        success: false,
+        message: "No review found with the given ID.",
+      });
+    }
+
+    res.status(200).send({
+      success: true,
+      message: "Review updated successfully.",
+      updatedReview,
+    });
+  } catch (error) {
+    console.error("Error updating review:", error);
+    res.status(500).send({
+      success: false,
+      message: "Server Error",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   createReviewController,
   getreviewbyidcontroller,
   deletereviewbyidcontroller,
+  updateReviewController,
 };
