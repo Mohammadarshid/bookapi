@@ -131,8 +131,46 @@ const getbookbyidcontroller = async (req, res) => {
   }
 };
 
+// 🔍 Search Books by Title or Author (Partial & Case-insensitive)
+const searchBooksController = async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    if (!query) {
+      return res.status(400).send({
+        success: false,
+        message: "Search query is required",
+      });
+    }
+
+    const results = await BookModel.find({
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { author: { $regex: query, $options: "i" } },
+      ],
+    });
+
+    res.status(200).send({
+      success: true,
+      total: results.length,
+      results,
+    });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "Error searching books",
+      error,
+    });
+  }
+};
+
+
+
+
 module.exports = {
   createBookController,
   getallbooksController,
   getbookbyidcontroller,
+  searchBooksController
+
 };

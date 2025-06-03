@@ -21,7 +21,7 @@ const bookSchema = new mongoose.Schema(
     publishedYear: {
       type: Number,
     },
-    
+
     averageRating: {
       type: Number,
       default: 0,

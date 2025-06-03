@@ -4,6 +4,7 @@ const {
   createBookController,
   getallbooksController,
   getbookbyidcontroller,
+  searchBooksController,
 } = require("../controllers/bookcontroller");
 
 const router = express.Router();
@@ -16,5 +17,8 @@ router.get("/allbooks", getallbooksController);
 
 //  routers get book by id
 router.get("/booked/:id", getbookbyidcontroller);
+
+// 🔍 Search route
+router.get("/search", searchBooksController);
 
 module.exports = router;

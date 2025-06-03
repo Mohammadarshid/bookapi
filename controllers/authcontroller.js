@@ -1,6 +1,6 @@
 const UserModel = require("../models/UserModel");
 const bcrypt = require("bcryptjs");
-const JWT =require ("jsonwebtoken")
+const JWT = require("jsonwebtoken");
 const registerController = async (req, res) => {
   try {
     const { userName, email, password, address, phone } = req.body;
@@ -25,7 +25,6 @@ const registerController = async (req, res) => {
     var salt = bcrypt.genSaltSync(10);
     const hashingpassword = await bcrypt.hash(password, salt);
 
-    //  create User
     const user = new UserModel({
       userName,
       email,
@@ -84,9 +83,11 @@ const loginController = async (req, res) => {
       });
     }
     //   token
-    const token = JWT.sign({ id: user.id_ },process.env.JWT_seCRET,{expiresIn:"7days"})
+    const token = JWT.sign({ id: user.id_ }, process.env.JWT_seCRET, {
+      expiresIn: "7days",
+    });
 
-    user.password = undefined;      // remove password from  user
+    user.password = undefined; // remove password from  user
     res.status(200).send({
       success: true,
       message: " login successfully",
